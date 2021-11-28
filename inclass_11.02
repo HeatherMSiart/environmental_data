@@ -1,0 +1,14 @@
+require(palmerpenguins)
+dat_ade = droplevels(subset(penguins, species == "Adelie"))
+dat_ade
+
+hist(dat_ade$body_mass_g, main = "Adelie Penguins: Body Mass", xlab = "body mass (g)")
+
+sex_female = subset(dat_ade, sex == "female")
+t.test(sex_female$body_mass_g, mu = 0)
+
+sex_male = subset(dat_ade, sex == "male")
+t.test(sex_male$body_mass_g, mu = 4000, alternative = "greater")
+
+t.test(sex_male$body_mass_g, sex_female$body_mass_g, alternative = "greater")
+

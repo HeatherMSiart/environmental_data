@@ -1,0 +1,77 @@
+---
+title: "ANOVA (by hand)"
+author: "Heather Siart"
+date: "11/27/2021"
+Partners: "N/A"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+subtitle: Analysis of Environmental Data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+require("here")
+rope  = read.csv(here("data", "rope.csv"))
+summary(rope)
+```
+```{r}
+levels(rope$rope.type)
+```
+
+# ANOVA by hand templet
+```{r}
+rm(list = ls())
+
+rope = read.csv(here("data", "rope.csv"))
+rope$rope.type = factor(rope$rope.type)
+levels(rope$rope.type)
+
+n_obs = 121
+n_group = 7
+
+ss_tot = ....
+df_tot = ....
+
+agg_sq_resids = ....
+ss_within = ....
+df_within = ....
+
+ss_among = ....
+df_among = ....
+
+ms_within = ....
+ms_among  = ....
+
+f_ratio = ....
+f_pval = ....
+```
+
+# Question 1:
+Submit the code you used to build your ANOVA by hand
+
+# Question 2:
+Examine the conditional boxplot in the Partitioning Variance: Within-Group section of the walkthrough. Based on the figure, do you think there are equal variances among the groups?
+
+# Question 3:
+Conduct a Bartlett test to assess the homogeneity of variances of the percent cut among the rope type groups. Report the p-value.
+
+# Question 4:
+Given your graphical assessment (question 2) and the Bartlett test, do you think an ANOVA-type analysis is appropriate on the raw data? Explain why or why not.
+
+# Question 5:
+Which rope type is the base case?
+
+Blaze is the base case.
+
+# Question 6:
+What is the mean percent cut of the base case rope? Show your calculation using value(s) from the model coefficient table.
+
+# Question 7:
+What is the mean percent cut rope type XTC? Show your calculation using value(s) from the model coefficient table.

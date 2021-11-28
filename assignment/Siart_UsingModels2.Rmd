@@ -1,0 +1,181 @@
+---
+title: "Using Models 2"
+author: "Heather Siart"
+date: "11/27/2021"
+Partners: "N/A"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+subtitle: Analysis of Environmental Data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1-sample t-test
+```{r}
+require(palmerpenguins)
+
+t.test(subset(penguins, species == "Gentoo")$flipper_length_mm)
+```
+Equal to 218 mm
+```{r}
+t.test(
+  x = subset(penguins, species == "Gentoo")$flipper_length_mm,
+  mu = 218
+)
+```
+Smaller than 218 mm
+```{r}
+t.test(
+  x = subset(penguins, species == "Gentoo")$flipper_length_mm,
+  mu = 218,
+  alternative = "less"
+)
+```
+# 2-sampe t-test
+```{r}
+t.test(flipper_length_mm ~ species, data = subset(penguins, species != "Chinstrap"))
+```
+# 1-way ANOVA - 1-Way Analysis of Variance: Procedure
+To perform an ANOVA in R, you can use this procedure:
+
+1. Perform graphical and numerical data exploration
+2. Fit a linear model using lm()
+3. Examine the model coefficient table using summary()
+4. Conduct the Analysis of Variance using anova()
+
+# Data exploration
+Graphical
+explore normality using histograms and density plots:
+```{r}
+par(mfrow = c(1, 2))
+hist(penguins$body_mass_g, breaks = 80, main = "histogram of body mass", xlab = "body mass (g)")
+plot(density(penguins$body_mass_g, na.rm = TRUE), main = "density plot of body mass")
+```
+Conditional boxplots are great for categorical variables
+```{r}
+require(palmerpenguins)
+boxplot(body_mass_g ~ species, data = penguins)
+```
+Numerical
+```{r}
+dat_chinstrap = subset(penguins, species == "Chinstrap")
+mean(dat_chinstrap$body_mass_g, na.rm = TRUE)
+```
+```{r}
+shapiro.test(dat_chinstrap$body_mass_g)
+```
+Shapiro test null hypothesis: “The data are drawn from a normally-distributed population.”
+
+# Fit a linear model
+```{r}
+fit_species = lm(body_mass_g ~ species, data = penguins)
+summary(fit_species)
+```
+# Conduct the ANOVA
+```{r}
+anova(fit_species)
+```
+# One-Way Anova Complete Walkthrough
+Use the lm() function to store the model in a variable:
+```{r}
+fit_species = lm(body_mass_g ~ species, data = penguins)
+summary(fit_species)
+```
+Conduct the ANOVA
+```{r}
+anova(fit_species)
+```
+# Two Tables: model coefficients and ANOVA
+Two-Way Additive ANOVA
+```{r}
+boxplot(body_mass_g ~ species, data = penguins)
+```
+Fit a 2-way, additive model
+```{r}
+fit_additive = lm(body_mass_g ~ sex + species, data = penguins)
+summary(fit_additive)
+```
+# Two-Way interactive (factorial) ANOVA
+```{r}
+fit_interactive = lm(body_mass_g ~ sex * species, data = penguins)
+summary(fit_interactive)
+```
+# Simple Linear Regression: Penguin Bills and Body Mass
+```{r}
+lm(bill_length_mm ~ body_mass_g, data = penguins)
+```
+# Question 1: 
+Re-create the conditional boxplot of penguin body mass conditioned on sex and species.
+```{r}
+boxplot(body_mass_g ~ sex * species, data = penguins,
+        main = "Penguin Body Mass by Species and Sex",
+        xlab = "",
+        ylab = " Body Mass (g)",
+        names = c("Female \nAdelie", "Female \nChinstrap", "Female \nGentoo", 
+                  "Male \nAdelie", "Male \nChinstrap", "Male \nGentoo"), las = 2,
+        col = "hotpink4")
+```
+
+# Question 2:
+Based on the boxplots, do you think male penguins (of any species) are significantly heavier than female penguins? Explain your reasoning.
+
+Not all penguin species show a significant different between females and males. Adelie and Chinstrap females and males overlap in body mass. Gentoo is the only species that shows an observed significant difference in body mass between females and males.
+
+# Question 3:
+Do you think adding sex to a model that already includes species will improve the model fit?
+
+Yes, adding sex to a model that already includes species will improve the model fit. Adding sex will allow us to see the demographics of the species populations sampled and see if it is all individuals within the species or just the males or females.
+
+# Question 4:
+Show the R-code you used to build fit_both
+```{r}
+fit_both = 
+  lm(
+    formula = penguins$body_mass_g ~ penguins$sex * penguins$species)
+
+summary(fit_both)
+```
+
+# Question 5:
+What is the base case for the two-way model that includes sex and species?
+
+The base case for the two-way model that includes sex and species is male Adelie.
+
+# Question 6:
+What are the names of the two coefficients (from the first column of the coefficient table) you need to calculate the average mass of female Chinstrap penguins?
+
+The names of the two coefficients are Estimate Std.  and Error t.
+
+# Question 7:
+What is the predicted average mass of female Chinstrap penguins in the interactive model?
+
+Predicted Female Chinstrap mean body mass (g) = 0.3055292
+
+```{r}
+aggregate(
+  body_mass_g ~ sex * species,
+  data = penguins,
+  FUN = function(x) shapiro.test(x)$p.value)
+```
+
+# Question 8:
+What is the observed average mass of female Chinstrap penguins, calculated from the penguins data?
+
+Observed Female Chinstrap mean body mass (g) = 
+```{r}
+ob_chin = aggregate(
+  body_mass_g ~ sex * species,
+  data = penguins,
+  FUN = mean)
+
+boxplot(ob_chin)
+```
+
+
+

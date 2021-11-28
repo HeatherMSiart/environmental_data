@@ -1,0 +1,29 @@
+---
+title: "R Markdown Documents - Part 1"
+author: "Heather Siart"
+date: "9/10/2021"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    toc_float: yes
+subtitle: Analysis of Environmental Data
+---   
+
+Hi, my name is **Heather Siart** and I am a first year master's thesis student in the *Environmental Conservation* department.
+
+1. Basic R
+2. How to work with my own data.
+3. Hypothesis testing
+4. how to make a dataframe
+
+* Systematic Botany
+* Wildlife Ecology
+* Intro to Drawing
+* limnology
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
