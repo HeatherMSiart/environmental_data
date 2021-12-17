@@ -1,0 +1,353 @@
+---
+title: "final_R_reference"
+author: "Heather Siart"
+date: "12/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R Reference Guide {.tabset .tabset-pills}
+
+
+## Loading Data and Packages
+```{r}
+require("here")
+require(palmerpenguins)
+delomys = read.csv(here("data", "delomys.csv"))
+ginkgo = read.csv(here("data", "ginkgo_data_2021.csv"))
+```
+
+## Data Structures
+
+
+### C()
+
+The function c() combines or concatenates its arguments into a vector (a 1-dimensional data structure consisting of 1 or more elements).
+
+* All of the elements must be of the same type.
+* I can’t combine character and numeric types in the same call to c()
+
+Here’s two examples using numeric and character data types:
+
+```{r}
+## Create a vector of numbers:
+num_vec  = c(1, 4, 8, 9, 13)
+
+## Create a vector of characters:
+char_vec = c("a", "fish", "data is cool")
+```
+
+I can show the contents of a vector by typing the name of the vector, or using the print() function.
+
+```{r}
+## Typing the name of the vector into the console prints the contents
+num_vec
+```
+
+```{r}
+## The print() function accomplishes the same task:
+print(char_vec)
+```
+
+### length()
+
+You can use length() to get or set the length of vectors and factors, and other R objects where a method has been defined.
+
+```{r}
+length(ginkgo$max_width)
+```
+
+### matrix()
+
+Makes a matrix from a given set of values
+
+```{r}
+mat = matrix(1:28, nrow = 4, ncol = 4)
+print(mat)
+```
+
+### data.frame()
+ 
+Tightly coupled collections of variables which share many of the properties of matrices an of lists, used as the fundamental data structure by most of R's modeling software
+
+```{r}
+cat = data.frame(1:10)
+print(cat)
+```
+
+### nrow()
+
+returns the number of rows in a vector, array, or data frame
+
+nrow(x)
+
+x = a vector, array, data frame, or NULL
+
+```{r}
+nrow(mat)
+```
+
+### ncol()
+
+returns the number of columns in a vector, array, or data frame
+
+xcol(x)
+
+x = a vector, array, data frame, or NULL
+
+```{r}
+ncol(mat)
+
+dat = matrix(1:49, nrow = 7, ncol = 7)
+print(dat)
+```
+
+### dim()
+
+Dimensions of an object
+
+dim(x)
+
+dim(x) <- value
+
+x = an R object, for example a matrix, array or data frame
+
+value = for a default nethod, either NULL or a numeric vector, which is coerced to integers (by truncation)
+
+```{r}
+dim(dat)
+```
+
+## Subsetting
+
+### $ 
+
+Subset a data frame by name: select one of the columns in the ginkgo data
+
+```{r}
+Gnotch = (ginkgo$notch_depth)
+```
+
+### [] 
+
+Use subset by position to:
+
+* select first row of the ginkgo data
+* select the element in row 2, column 3
+* select the 3rd column of the ginkgo data
+
+```{r}
+# First row of the ginkgo data
+ginkgo[1, ]
+
+# Element in row 2, column 3
+ginkgo[2, 3]
+
+# 3rd column of the ginkgo data
+ginkgo[ ,3]
+```
+
+### subset() 
+
+Use this function to retrieve all the data for Adelie penguins (in the species column) from the peuguins dataset.
+
+```{r}
+All_Adelie = subset(penguins, species=="Adelie")
+```
+
+## Numerical Data Exploration
+
+### summary()
+
+summary = used to show results of various model fitting functions or objects
+
+```{r}
+summary(num_vec)
+```
+
+
+### mean()
+
+mean = the average of the data
+
+mean(x, ...)
+
+x = an R object
+
+```{r}
+mean(ginkgo$max_width)
+```
+
+### sd()
+
+sd or standard deviation, 
+
+sd(x, na.rm = FALSE)
+
+x = a numeric vector or an R object but not a factor coercible to numeric by as.double(x)
+
+na.rm = logical. Should missing values be removed? (if FALSE, you don't need to add it into the code)
+
+```{r}
+sd(ginkgo$max_width, na.rm = FALSE)
+
+sd(ginkgo$max_width, na.rm = TRUE)
+```
+
+## Graphical Data Exploration
+
+### Scatterplot: 
+Using the ginkgo data, create a scatterplot of max leaf depth (x) and max leaf width (y).
+
+```{r}
+plot(ginkgo$max_depth, ginkgo$max_width,
+     main = "Max Leaf Depth vs Max Leaf Width for Ginkgo leaves at UMass", 
+     xlab = "Leaf Depth", 
+     ylab = "Leaf Width",
+     col = "thistle3",
+     pch = 20,
+     cex = 0.60,        
+     xlim = c(15, 160),
+     ylim = c(15, 140)
+     )
+```
+
+### plot() required arguments:
+
+* col = Changes the color of the plotted data
+* pch = defines the point symbols in the plot
+* cex = Changes the size of the data points on the graph
+* main = Title of the graph
+* xlab = Label the x axis
+* ylab = Label the y axis
+* xlim = Sets the range limit of the x axis
+* ylim = Sets the range limit of the y axis
+
+### hist() 
+* Create a histogram of penguin flipper lengths. Required arguments:
+
+* breaks = are the number of bars on your histogram
+
+```{r}
+hist(penguins$flipper_length_mm,
+     main = "Flipper Length of Penguins",
+     xlab = "Length", col = "palevioletred3",
+     xlim = c(160, 250), breaks = 10)
+```
+
+### boxplot()
+You must include two examples using the ginkgo data:
+
+* 1. a simple boxplot of ginkgo petiole lengths
+
+```{r}
+boxplot(ginkgo$petiole_length,
+        main = "Petiole Length of Ginkgo Leave at UMass",
+        xlab = "",
+        ylab = "Length",
+        col = "skyblue3")
+```
+
+* 2. conditional boxplot of one of the continuous variables conditioned on the seeds_present column.
+
+
+```{r}
+boxplot(ginkgo$seeds_present == FALSE,
+        main = "Ginkgo Trees Without Seeds on Campus",
+        ylab = "No Seeds",
+        col = "azure4")
+```
+
+* Create a 4-panel figure of histograms, arranged in a 2 by 2 grid. You may use any data you like, but each histogram must be different and have appropriate titles and axes. - par() required arguments: - mrow =
+
+```{r}
+par(mfrow = c(2, 2))
+hist(penguins$bill_length_mm,
+     main = "Bill Length mm of Penguins",
+        xlab = "Length mm",
+        ylab = "Frequency",
+        col = "darkgoldenrod1")
+
+hist(penguins$bill_depth_mm,
+     main = "Bill Depth mm of Penguins",
+        xlab = "Depth (mm)",
+        ylab = "Frequency",
+        col = "darkorange1")
+
+hist(penguins$flipper_length_mm,
+     main = "Flipper Length mm of Penguins",
+        xlab = "Length (mm)",
+        ylab = "Frequency",
+        col = "coral2")
+
+hist(penguins$body_mass_g,
+     main = "Body Mass (g) of Penguins",
+        xlab = "Mass (g)",
+        ylab = "Frequency",
+        col = "royalblue4")
+```
+
+## Distribution Functions
+
+### dnorm()
+
+dnorm or the normal distribution
+
+dnorm(x, mean = 0, sd = 1, log = FALSE)
+
+x = vector quantiles
+mean = vector of means
+sd = vector of standard deviations
+log = logical; if TRUE probablilities p are given as log(p)
+
+### pnorm()
+
+pnorm or the normal distribution
+
+pnorm(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+
+q = vector quantiles
+mean = vector of means
+sd = vector of standard deviations
+lower.tail = logical; if TRUE (default), probabilities are P[X <= x] otherwise, P[X >x]
+log.p = logical; if TRUE probablilities p are given as log(p)
+
+### qnorm()
+
+qnorm or the normal distribution
+
+qnorm(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE
+)
+
+p = vector of probabilities
+mean = vector of means
+sd = vector of standard deviations
+lower.tail = logical; if TRUE (default), probabilities are P[X <= x] otherwise, P[X >x]
+log = logical; if TRUE probablilities p are given as log(p)
+
+### dbinom()
+
+dbinom or the binomial distribution
+
+dbinom(x, size, prob, log = FALSE)
+
+x = vector of quantiles
+
+### pbinom()
+
+pbinom or the binomial distribution
+
+pbinom(q, size, prob, lower.tail = TRUE, log.p = FALSE)
+
+q = vector of quantiles
+
+### qbinom()
+
+qbinom or the binomial distribution
+
+qbinom(p, size, prob, lower.tail = TRUE, log.p = FALSE)
+
+p = vector of probabilities
